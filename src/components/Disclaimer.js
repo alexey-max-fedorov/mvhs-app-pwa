@@ -7,11 +7,7 @@ import './Disclaimer.css';
 const Disclaimer = () => (
   <div className="disclaimer">
     Information on this page may not be current. Please see the{' '}
-    <a
-      href="http://www.mvla.net/mvhs"
-      target="_blank"
-      rel="noopener noreferrer"
-    >
+    <a href="https://mvhs.mvla.net" target="_blank" rel="noopener noreferrer">
       official school website
     </a>{' '}
     for authoritative info.

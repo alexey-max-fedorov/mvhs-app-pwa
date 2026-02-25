@@ -5,7 +5,7 @@
     "desc": "",
     "image": "mvhs.png",
     "links": {
-      "Link": "http://www.mvla.net/mvhs"
+      "Link": "https://mvhs.mvla.net"
     }
   },
   {
@@ -14,8 +14,7 @@
     "desc": "",
     "image": "bulletin.png",
     "links": {
-      "Link":
-        "https://mvhs.mvla.net/Student-Activities/Daily-Bulletin/index.html"
+      "Link": "https://mvhs.mvla.net/daily-bulletin-home"
     }
   },
   {
@@ -46,13 +45,12 @@
     }
   },
   {
-    "name": "Mental Health Referral",
+    "name": "Mental Health Access",
     "role": "",
     "desc": "",
     "image": "district.png",
     "links": {
-      "Link":
-        "https://www.mvla.net/Departments/Educational-Services/Mental-Health-and-Wellness/MVLA-School-based-Services/index.html"
+      "Link": "https://www.mvla.net/mental-health-and-wellness"
     }
   },
   {
@@ -61,8 +59,7 @@
     "desc": "",
     "image": "district.png",
     "links": {
-      "Link":
-        "https://www.mvla.net/Departments/Educational-Services/Title-IX/Sexual-Harassment--Resources/index.html"
+      "Link": "https://www.mvla.net/sexual-harassment-and-resources"
     }
   }
 ]
