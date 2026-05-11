@@ -2,6 +2,7 @@
   "name": "mvhs-app-pwa",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@11.0.9",
   "dependencies": {
     "babel-plugin-transform-remove-console": "^6.8.5",
     "enzyme": "^2.9.1",
