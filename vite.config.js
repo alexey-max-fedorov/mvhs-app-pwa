@@ -64,5 +64,22 @@ export default defineConfig({
   },
   build: {
     outDir: 'dist',
+    rollupOptions: {
+      // Packages removed in Task 4 are still imported by legacy source files
+      // that will be rewritten in Tasks 7-16. Mark them external so Rollup
+      // does not crash the build during the transition.
+      external: [
+        /^material-ui(\/.*)?$/,
+        /^material-ui-icons(\/.*)?$/,
+        /^react-loadable$/,
+        /^react-inline-css$/,
+        /^react-dates(\/.*)?$/,
+        /^offline-plugin(\/.*)?$/,
+        /^enzyme$/,
+        // react-router-dom v4 used deep /es/* sub-paths that don't exist in v6;
+        // these will be fixed when App.js is rewritten in Task 7.
+        /^react-router-dom\/es\/.+$/,
+      ],
+    },
   },
 });
