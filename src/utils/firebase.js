@@ -49,8 +49,6 @@ export const getFirebaseVal = async (ref: string, forceFetch: boolean): any => {
 
   //If value is not in the cache, or if we need to fetch
   if (!val || forceFetch) {
-    console.log(`Fetching "${ref}" from web`);
-
     const response = await fetch(`${config.databaseURL + ref}.json`);
     val = await response.json();
 
@@ -76,8 +74,6 @@ export const getFirebaseVal = async (ref: string, forceFetch: boolean): any => {
       const updatedCache = deep(fbCache, deepPath, val);
       await storage.setItem(fbCacheKey, JSON.stringify(updatedCache));
     }
-  } else {
-    console.log(`Fetching "${ref}" from cache`);
   }
 
   return val;
