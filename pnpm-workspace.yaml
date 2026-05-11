@@ -1,0 +1,13 @@
+allowBuilds:
+  '@expo/ngrok': false
+  '@expo/traveling-fastlane-darwin': false
+  core-js: true
+  core-js-pure: true
+  ejs: false
+  es5-ext: false
+  fsevents: true
+  husky: true
+  jss: false
+  phantomjs-prebuilt: false
+  spawn-sync: false
+  uglifyjs-webpack-plugin: true
