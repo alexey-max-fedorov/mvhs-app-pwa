@@ -8,7 +8,6 @@ import Question from './icons/question-mark-round-line.svg';
 import { CloudOff } from 'material-ui-icons';
 import CircularProgress from 'material-ui/Progress/CircularProgress';
 import Loadable from '../LCEComponent';
-import './WeatherIcon.css';
 
 type Props = {
   loading: boolean,
