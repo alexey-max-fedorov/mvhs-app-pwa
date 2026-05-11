@@ -1,5 +1,3 @@
-//@flow
-
-export const addOnResumeListener = (listener: () => void) => {
+export const addOnResumeListener = (listener) => {
   window.addEventListener('focus', listener);
 };

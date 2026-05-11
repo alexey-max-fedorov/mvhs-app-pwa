@@ -1,11 +1,7 @@
-// @flow
-
 import React from 'react';
 
 import BellSchedule from '../components/BellSchedule';
-import type { Period } from '../components/BellSchedule';
 import moment from 'moment';
-import type Moment from 'moment';
 import { getFirebaseVal } from '../utils/firebase';
 import * as storage from '../utils/storage';
 import * as appstate from '../utils/appstate';
@@ -16,26 +12,14 @@ const pad = (num, size) => {
   return s;
 };
 
-const to12Hour = (hour: string) => {
+const to12Hour = (hour) => {
   const hourInt = parseInt(hour, 10);
   return pad(hourInt > 12 ? hourInt - 12 : hourInt, 2);
 };
 
-type Props = {
-  date: Moment
-};
-
-type State = {
-  periods: Period[],
-  loading: boolean,
-  error: any,
-  scheduleName: string,
-  refreshed: Moment
-};
-
 const fbTimestampKey = 'fbTimestamp';
 
-class BellScheduleContainer extends React.PureComponent<Props, State> {
+class BellScheduleContainer extends React.PureComponent {
   state = {
     periods: [],
     loading: true,
@@ -48,10 +32,8 @@ class BellScheduleContainer extends React.PureComponent<Props, State> {
     this.loadBellSchedule().then();
 
     this.timeRefreshInterval = window.setInterval(() => {
-      //If last refresh was more than 1 minute ago
       if (this.state.refreshed.diff(moment(), 'minutes') < -1) {
         this.loadBellSchedule().then();
-        console.log('Outdated, re-highlighting');
       }
     }, 1000);
   }
@@ -60,7 +42,7 @@ class BellScheduleContainer extends React.PureComponent<Props, State> {
     window.clearInterval(this.timeRefreshInterval);
   }
 
-  componentDidUpdate(prevProps: Props) {
+  componentDidUpdate(prevProps) {
     if (this.props.date && !this.props.date.isSame(prevProps.date)) {
       this.loadBellSchedule().then();
     }
@@ -96,13 +78,8 @@ class BellScheduleContainer extends React.PureComponent<Props, State> {
 
   async getBellSchedule() {
     const fbTimestampString = await storage.getItem(fbTimestampKey);
-    //If last fetch was over 30 minutes ago, force fetch from Internet
     const forceFetch =
       !fbTimestampString || Date.now() - JSON.parse(fbTimestampString) > 1.8e6;
-
-    //temporary change of fetch time to 3 mins because of special scedule
-    //const forceFetch =
-    //!fbTimestampString || Date.now() - JSON.parse(fbTimestampString) > 1.8e5;
 
     if (!fbTimestampString || forceFetch) {
       await storage.setItem(fbTimestampKey, JSON.stringify(Date.now()));
@@ -113,9 +90,8 @@ class BellScheduleContainer extends React.PureComponent<Props, State> {
 
     let schedule = '';
     let special = false;
-    //Get special day schedules, check if selected day is special
     const specialDays = await getFirebaseVal(`/days`, forceFetch);
-    for (const specDay: string in specialDays) {
+    for (const specDay in specialDays) {
       const start = specDay.substr(0, 8);
       const end = specDay.substr(9, 8);
       const startDate = moment(start, 'MMDDYYYY');
@@ -130,23 +106,21 @@ class BellScheduleContainer extends React.PureComponent<Props, State> {
       }
     }
 
-    //If normal day, get weekday map for the usual schedule
     if (!special) {
       const weekdayMap = await getFirebaseVal('/weekday-map', forceFetch);
       schedule = weekdayMap[dayOfWeek];
     }
 
-    const periods: Period[] = [];
+    const periods = [];
 
     if (schedule !== 'none') {
-      //Get the schedule's periods
       const scheduleData = await getFirebaseVal(
         `/schedules/${schedule}`,
         false
       );
 
       const now = this.state.refreshed;
-      for (const periodTime: string in scheduleData) {
+      for (const periodTime in scheduleData) {
         const startHour = periodTime.substr(0, 2);
         const startMin = periodTime.substr(2, 2);
         const endHour = periodTime.substr(5, 2);
@@ -178,7 +152,6 @@ class BellScheduleContainer extends React.PureComponent<Props, State> {
       schedule += '*';
     }
 
-    //Get all schedules as cache
     getFirebaseVal(`/schedules`, forceFetch).then();
 
     return {

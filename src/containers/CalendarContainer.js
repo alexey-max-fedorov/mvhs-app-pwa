@@ -1,34 +1,10 @@
-// @flow
-
 import React from 'react';
 
-import type Moment from 'moment';
 import Calendar from '../components/Calendar';
-
 import calendarUrls from '../utils/calendarUrls';
 import moment from 'moment';
 
-type SchoolEvent = {
-  summary: string,
-  description: string,
-  location: string,
-  mapURL: string,
-  start: string,
-  end: string
-};
-
-type Props = {
-  date: Moment
-};
-
-type State = {
-  loading: boolean,
-  error: any,
-  events: SchoolEvent[],
-  selectedCalendar: string
-};
-
-class DatePickerContainer extends React.PureComponent<Props, State> {
+class DatePickerContainer extends React.PureComponent {
   state = {
     loading: true,
     error: '',
@@ -40,8 +16,7 @@ class DatePickerContainer extends React.PureComponent<Props, State> {
     this.loadCalendar().then();
   }
 
-  componentDidUpdate(prevProps: Props, prevState: State) {
-    console.log(this.state);
+  componentDidUpdate(prevProps, prevState) {
     if (
       (this.props.date && !this.props.date.isSame(prevProps.date)) ||
       this.state.selectedCalendar !== prevState.selectedCalendar
@@ -51,9 +26,7 @@ class DatePickerContainer extends React.PureComponent<Props, State> {
   }
 
   async loadCalendar() {
-    this.setState({
-      loading: true
-    });
+    this.setState({ loading: true });
 
     const today = this.props.date
       .clone()
@@ -73,10 +46,9 @@ class DatePickerContainer extends React.PureComponent<Props, State> {
 
     try {
       const response = await fetch(url);
-      //console.log(url);
       const json = await response.json();
 
-      const eventList: SchoolEvent[] = json.items
+      const eventList = json.items
         .filter(
           e =>
             e.start &&
@@ -133,9 +105,7 @@ class DatePickerContainer extends React.PureComponent<Props, State> {
   }
 
   handleChange = e => {
-    this.setState({
-      selectedCalendar: e.target.value
-    });
+    this.setState({ selectedCalendar: e.target.value });
   };
 
   render() {
@@ -153,15 +123,8 @@ class DatePickerContainer extends React.PureComponent<Props, State> {
 }
 
 function recCheck(rec, summary) {
-  if (rec === undefined) {
-    //console.log(rec);
-    return true;
-  } else {
-    //console.log("test: " + rec[0] + " 1: " + summary);
-    //Check if the event recurs weekly, if so, filter it out
-    if (rec[0].includes('FREQ=WEEKLY') && summary.includes('Schedule'))
-      return false;
-  }
+  if (rec === undefined) return true;
+  if (rec[0].includes('FREQ=WEEKLY') && summary.includes('Schedule')) return false;
   return true;
 }
 

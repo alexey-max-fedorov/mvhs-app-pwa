@@ -1,5 +1,3 @@
-// @flow
-
 import * as storage from './storage';
 
 const config = {
@@ -39,7 +37,7 @@ function set(obj, path, value) {
 const fbCacheKey = 'fbCache';
 const fbResetTimestampKey = 'fbResetTimestamp';
 
-export const getFirebaseVal = async (ref: string, forceFetch: boolean): any => {
+export const getFirebaseVal = async (ref, forceFetch) => {
   const fbCacheString = await storage.getItem(fbCacheKey);
   let fbCache = !fbCacheString ? {} : JSON.parse(fbCacheString);
 

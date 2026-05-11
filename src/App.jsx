@@ -1,7 +1,10 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
-import { Bell, Map, Link, Info, Settings } from 'lucide-react';
+import { Bell, Map, Link, Info, Settings, Bot } from 'lucide-react';
 import logo from './assets/outlinelogo.svg';
+
+const CLAUDE_SKILL_URL =
+  'https://claude.ai/new?q=Install%20the%20skill%20from%20https%3A%2F%2Fgithub.com%2Falexey-max-fedorov%2Fmvhs-bellschedule-skill';
 
 const SchedulePage = React.lazy(() => import('./containers/SchedulePageContainer'));
 const MapPage = React.lazy(() => import('./containers/MapContainer'));
@@ -33,6 +36,15 @@ export default function App() {
         <header className="glass-nav sticky top-0 z-40 flex items-center gap-3 px-4 py-3 border-b border-white/[.08]">
           <img src={logo} className="h-7 w-7" alt="MVHS Logo" />
           <span className="text-base font-semibold tracking-tight">MVHS</span>
+          <a
+            href={CLAUDE_SKILL_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Install Claude Skill"
+            className="ml-auto p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+          >
+            <Bot size={20} strokeWidth={1.75} />
+          </a>
         </header>
 
         {/* Page content */}
