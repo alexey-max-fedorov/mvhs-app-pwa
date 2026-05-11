@@ -5,6 +5,7 @@ allowBuilds:
   core-js-pure: true
   ejs: false
   es5-ext: false
+  esbuild: true
   fsevents: true
   husky: true
   jss: false

@@ -2,6 +2,7 @@
   "name": "mvhs-app-pwa",
   "version": "0.1.0",
   "private": true,
+  "type": "module",
   "packageManager": "pnpm@11.0.9",
   "dependencies": {
     "babel-plugin-transform-remove-console": "^6.8.5",
@@ -33,6 +34,8 @@
     "react-virtualized": "^9.11.1"
   },
   "devDependencies": {
+    "@babel/plugin-transform-flow-strip-types": "^7.27.1",
+    "@vitejs/plugin-react": "^5.2.0",
     "autoprefixer": "^7.1.6",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.0",
@@ -80,6 +83,8 @@
     "sw-precache-webpack-plugin": "^0.11.4",
     "uglifyjs-webpack-plugin": "^1.1.0",
     "url-loader": "^0.6.0",
+    "vite": "^5.4.21",
+    "vite-plugin-pwa": "^1.3.0",
     "webpack": "^3.8.1",
     "webpack-bundle-analyzer": "^2.9.0",
     "webpack-common-shake": "^1.5.3",
@@ -95,14 +100,12 @@
   },
   "main": "./src/index.native.js",
   "scripts": {
-    "precommit": "lint-staged",
-    "start:web": "node web/scripts/start",
+    "start": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "start:expo": "react-native-scripts start",
     "start:android": "react-native-scripts android",
-    "build:web": "node web/scripts/build",
-    "deploy:expo": "exp publish",
-    "flow": "flow",
-    "test:web": "node web/scripts/test --env=jsdom"
+    "deploy:expo": "exp publish"
   },
   "jest": {
     "collectCoverageFrom": [

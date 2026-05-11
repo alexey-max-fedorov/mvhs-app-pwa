@@ -1,0 +1,68 @@
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import { VitePWA } from 'vite-plugin-pwa';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
+const babel = require('@babel/core');
+
+// Custom plugin: transform all src .js files through Babel to handle
+// Flow type annotations and JSX in .js files (legacy codebase convention).
+function babelFlowPlugin() {
+  return {
+    name: 'babel-flow-strip',
+    enforce: 'pre',
+    transform(code, id) {
+      if (!id.includes('/src/') || id.includes('node_modules') || !id.endsWith('.js')) {
+        return null;
+      }
+      const result = babel.transformSync(code, {
+        filename: id,
+        presets: [
+          ['@babel/preset-react', { runtime: 'automatic' }],
+        ],
+        plugins: ['@babel/plugin-transform-flow-strip-types'],
+        sourceMaps: true,
+        configFile: false,
+        babelrc: false,
+      });
+      return { code: result.code, map: result.map };
+    },
+  };
+}
+
+export default defineConfig({
+  plugins: [
+    babelFlowPlugin(),
+    react(),
+    VitePWA({
+      registerType: 'prompt',
+      manifest: {
+        name: 'MVHS App',
+        short_name: 'MVHS',
+        theme_color: '#050506',
+        background_color: '#050506',
+        display: 'standalone',
+        icons: [
+          { src: '/icons/icon-192.png', sizes: '192x192', type: 'image/png' },
+          { src: '/icons/icon-512.png', sizes: '512x512', type: 'image/png' },
+        ],
+      },
+    }),
+  ],
+  resolve: {
+    // material-ui@1.0.0-beta uses @babel/runtime/core-js/* paths (v7 style)
+    // which don't exist. Redirect to babel-runtime/core-js (v6) which is installed.
+    alias: {
+      '@babel/runtime/core-js': 'babel-runtime/core-js',
+    },
+  },
+  optimizeDeps: {
+    esbuildOptions: {
+      loader: { '.js': 'jsx' },
+    },
+  },
+  build: {
+    outDir: 'dist',
+  },
+});
