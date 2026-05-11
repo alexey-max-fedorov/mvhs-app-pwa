@@ -1,22 +1,6 @@
-// @flow
-
 import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
+import { createRoot } from 'react-dom/client';
 import App from './App';
-import registerServiceWorker from './registerServiceWorker';
+import './index.css';
 
-import './utils/addtohomescreen.js';
-import './utils/addtohomescreen.css';
-
-ReactDOM.render(<App showUpdate={false} />, document.getElementById('root'));
-
-registerServiceWorker();
-// offline-plugin removed; PWA handled by vite-plugin-pwa
-
-window.addToHomescreen({
-  lifespan: 0,
-  skipFirstVisit: false,
-  maxDisplayCount: 1,
-  validLocation: [/^\/$/]
-});
+createRoot(document.getElementById('root')).render(<App />);

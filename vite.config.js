@@ -77,8 +77,11 @@ export default defineConfig({
         /^offline-plugin(\/.*)?$/,
         /^enzyme$/,
         // react-router-dom v4 used deep /es/* sub-paths that don't exist in v6;
-        // these will be fixed when App.js is rewritten in Task 7.
+        // fixed in Task 7 (App.jsx rewrite) but legacy components may still reference them.
         /^react-router-dom\/es\/.+$/,
+        // Dead relative imports in legacy components not yet rewritten (Tasks 8-16).
+        // CovidLinksContainer was deleted; still referenced in SchedulePage.js via react-loadable.
+        /CovidLinksContainer/,
       ],
     },
   },
