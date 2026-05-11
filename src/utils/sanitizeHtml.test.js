@@ -42,4 +42,19 @@ describe('sanitizeHtml', () => {
     expect(result).toContain('href="https://example.com"');
     expect(result).toContain('Link');
   });
+
+  it('strips on* event handlers with unquoted values', () => {
+    const result = sanitizeHtml('<img src=x onerror=alert(1)>');
+    expect(result).not.toContain('onerror');
+  });
+
+  it('strips javascript: hrefs with no surrounding quotes', () => {
+    const result = sanitizeHtml('<a href=javascript:alert(1)>Click</a>');
+    expect(result).not.toContain('javascript:');
+  });
+
+  it('strips mixed-case script tags', () => {
+    const result = sanitizeHtml('<sCrIpT>alert(1)</sCrIpT>');
+    expect(result).not.toContain('alert');
+  });
 });
