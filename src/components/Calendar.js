@@ -1,5 +1,5 @@
 import React from 'react';
-import { cn } from '../utils/cn';
+import { sanitizeHtml } from '../utils/sanitizeHtml';
 
 function EventCard({ summary, start, end, description }) {
   return (
@@ -11,7 +11,10 @@ function EventCard({ summary, start, end, description }) {
         </span>
       </div>
       {description && (
-        <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{description}</p>
+        <div
+          className="text-xs text-muted-foreground mt-1 leading-relaxed [&_p]:m-0 [&_p]:mb-0.5 [&_a]:text-primary [&_a]:underline [&_b]:text-foreground/80"
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(description) }}
+        />
       )}
     </div>
   );
@@ -20,7 +23,6 @@ function EventCard({ summary, start, end, description }) {
 export default function Calendar({ loading, events, error, options, selectedOption, onHandleChange }) {
   return (
     <div className="space-y-2">
-      {/* Calendar selector */}
       {options && Object.keys(options).length > 1 && (
         <select
           value={selectedOption}
@@ -35,7 +37,6 @@ export default function Calendar({ loading, events, error, options, selectedOpti
         </select>
       )}
 
-      {/* States */}
       {loading && (
         <div className="glass rounded-glass p-6 flex justify-center">
           <div className="w-5 h-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
