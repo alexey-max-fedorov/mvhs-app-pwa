@@ -4,7 +4,7 @@ import BellSchedule from '../components/BellSchedule';
 import moment from 'moment';
 import { getFirebaseVal } from '../utils/firebase';
 import * as storage from '../utils/storage';
-import * as appstate from '../utils/appstate';
+import { parseFallbackSchedule } from '../utils/parseScheduleFromEvents';
 
 const pad = (num, size) => {
   let s = num + '';
@@ -25,7 +25,7 @@ class BellScheduleContainer extends React.PureComponent {
     loading: true,
     error: '',
     scheduleName: '',
-    refreshed: moment()
+    refreshed: moment(),
   };
 
   componentDidMount() {
@@ -45,34 +45,61 @@ class BellScheduleContainer extends React.PureComponent {
   componentDidUpdate(prevProps) {
     if (this.props.date && !this.props.date.isSame(prevProps.date)) {
       this.loadBellSchedule().then();
+      return;
+    }
+    // Calendar events arrived after Firebase already resolved to no periods.
+    if (
+      !this.state.loading &&
+      this.state.periods.length === 0 &&
+      this.state.error === '' &&
+      this.props.calendarEvents !== prevProps.calendarEvents &&
+      this.props.calendarEvents.length > 0
+    ) {
+      const fallback = parseFallbackSchedule(
+        this.props.calendarEvents,
+        this.props.date,
+        moment()
+      );
+      if (fallback.periods.length > 0) {
+        this.setState({ periods: fallback.periods, scheduleName: fallback.scheduleName });
+      }
     }
   }
 
   async loadBellSchedule() {
-    this.setState({
-      loading: true,
-      refreshed: moment()
-    });
+    this.setState({ loading: true, refreshed: moment() });
 
     try {
       const result = await this.getBellSchedule();
+
+      // No Firebase schedule for this day — try calendar events as fallback.
+      if (result.periods.length === 0 && this.props.calendarEvents?.length > 0) {
+        const fallback = parseFallbackSchedule(
+          this.props.calendarEvents,
+          this.props.date,
+          moment()
+        );
+        if (fallback.periods.length > 0) {
+          this.setState({
+            scheduleName: fallback.scheduleName,
+            periods: fallback.periods,
+            error: '',
+            loading: false,
+          });
+          return;
+        }
+      }
+
       this.setState({
         scheduleName: result.scheduleName,
         periods: result.periods,
         error: '',
-        loading: false
+        loading: false,
       });
     } catch (err) {
       console.error(err);
-
-      let errorMessage = err;
-      if (!navigator.onLine) {
-        errorMessage = 'No Internet connection';
-      }
-      this.setState({
-        error: errorMessage,
-        loading: false
-      });
+      const errorMessage = !navigator.onLine ? 'No Internet connection' : String(err);
+      this.setState({ error: errorMessage, loading: false });
     }
   }
 
@@ -114,50 +141,34 @@ class BellScheduleContainer extends React.PureComponent {
     const periods = [];
 
     if (schedule !== 'none') {
-      const scheduleData = await getFirebaseVal(
-        `/schedules/${schedule}`,
-        false
-      );
-
+      const scheduleData = await getFirebaseVal(`/schedules/${schedule}`, false);
       const now = this.state.refreshed;
+
       for (const periodTime in scheduleData) {
         const startHour = periodTime.substr(0, 2);
         const startMin = periodTime.substr(2, 2);
         const endHour = periodTime.substr(5, 2);
         const endMin = periodTime.substr(7, 2);
 
-        const start = this.props.date
-          .clone()
-          .hour(startHour)
-          .minute(startMin);
-        const end = this.props.date
-          .clone()
-          .hour(endHour)
-          .minute(endMin);
+        const start = this.props.date.clone().hour(startHour).minute(startMin);
+        const end = this.props.date.clone().hour(endHour).minute(endMin);
         const current = now.diff(start) >= 0 && now.diff(end) < 0;
         const progress = now.diff(start) / end.diff(start);
 
         periods.push({
           period: scheduleData[periodTime],
-          time: `${to12Hour(startHour)}:${startMin} - ${to12Hour(
-            endHour
-          )}:${endMin}`,
-          current: current,
-          progress: progress
+          time: `${to12Hour(startHour)}:${startMin} - ${to12Hour(endHour)}:${endMin}`,
+          current,
+          progress,
         });
       }
     }
 
-    if (special) {
-      schedule += '*';
-    }
+    if (special) schedule += '*';
 
     getFirebaseVal(`/schedules`, forceFetch).then();
 
-    return {
-      scheduleName: schedule,
-      periods: periods
-    };
+    return { scheduleName: schedule, periods };
   }
 
   render() {

@@ -89,6 +89,9 @@ class DatePickerContainer extends React.PureComponent {
         error: '',
         events: eventList
       });
+      if (typeof this.props.onEventsLoaded === 'function') {
+        this.props.onEventsLoaded(eventList);
+      }
     } catch (err) {
       console.error(err);
 
@@ -101,6 +104,9 @@ class DatePickerContainer extends React.PureComponent {
         error: errorMessage,
         events: []
       });
+      if (typeof this.props.onEventsLoaded === 'function') {
+        this.props.onEventsLoaded([]);
+      }
     }
   }
 

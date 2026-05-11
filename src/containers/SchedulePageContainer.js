@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import moment from 'moment';
 import SchedulePage from '../components/SchedulePage';
 import BellScheduleContainer from './BellScheduleContainer';
@@ -7,7 +7,13 @@ import WeatherContainer from './WeatherContainer';
 
 export default function SchedulePageContainer() {
   const [date, setDate] = useState(() => moment());
+  const [calendarEvents, setCalendarEvents] = useState([]);
   const touchStartX = useRef(null);
+
+  const handleDateChange = useCallback((newDate) => {
+    setCalendarEvents([]); // Clear stale events before the new date's events load
+    setDate(newDate);
+  }, []);
 
   const handleTouchStart = (e) => {
     touchStartX.current = e.touches[0].clientX;
@@ -17,7 +23,7 @@ export default function SchedulePageContainer() {
     if (touchStartX.current === null) return;
     const delta = e.changedTouches[0].clientX - touchStartX.current;
     if (Math.abs(delta) > 50) {
-      setDate((d) => d.clone().add(delta < 0 ? 1 : -1, 'day'));
+      handleDateChange(date.clone().add(delta < 0 ? 1 : -1, 'day'));
     }
     touchStartX.current = null;
   };
@@ -26,9 +32,9 @@ export default function SchedulePageContainer() {
     <div onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
       <SchedulePage
         date={date}
-        onDateChange={setDate}
-        bellSchedule={<BellScheduleContainer date={date} />}
-        calendar={<CalendarContainer date={date} />}
+        onDateChange={handleDateChange}
+        bellSchedule={<BellScheduleContainer date={date} calendarEvents={calendarEvents} />}
+        calendar={<CalendarContainer date={date} onEventsLoaded={setCalendarEvents} />}
         weather={<WeatherContainer />}
       />
     </div>
