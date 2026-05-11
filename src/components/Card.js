@@ -1,9 +1,10 @@
-import * as React from 'react';
-import './Card.css';
+import React from 'react';
+import { cn } from '../utils/cn';
 
-// Card to be used throughout the app. Sets standard border radius and shadow
-const Card = props => {
-  return <div className="card">{props.children}</div>;
-};
-
-export default Card;
+export default function Card({ children, className }) {
+  return (
+    <div className={cn('glass rounded-glass p-4', className)}>
+      {children}
+    </div>
+  );
+}

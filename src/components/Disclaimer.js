@@ -1,17 +1,8 @@
-// @flow
-
 import React from 'react';
 
-import './Disclaimer.css';
-
-const Disclaimer = () => (
-  <div className="disclaimer">
-    Information on this page may not be current. Please see the{' '}
-    <a href="https://mvhs.mvla.net" target="_blank" rel="noopener noreferrer">
-      official school website
-    </a>{' '}
-    for authoritative info.
-  </div>
-);
-
-export default Disclaimer;
+export default function Disclaimer({ message }) {
+  if (!message) return null;
+  return (
+    <p className="text-xs text-muted-foreground text-center px-4 py-2 leading-relaxed">{message}</p>
+  );
+}

@@ -1,38 +1,28 @@
-//@ flow
+import React from 'react';
 
-import * as React from 'react';
-import CreditsContainer from '../containers/CreditsContainer';
-import Typography from 'material-ui/Typography';
-import Button from 'material-ui/Button';
-
-import './AboutPage.css';
-
-const AboutPage = () => {
+export default function AboutPage() {
   return (
-    <div>
-      <div className="about-club center">
-        <Typography type="title" align="center" className="about-club-title">
-          MVHS Computer Science Club
-        </Typography>
-
-        <Typography type="body1" align="center" className="about-club-desc">
-          Join us to help develop this app and others for the MVHS community! No
-          programming experience necessary.
-        </Typography>
-
-        <Button
-          className="center"
-          href="https://github.com/mvhs-apps/mvhs-app-pwa"
-          target="_blank"
-          rel="noopener noreferrer"
-          color="accent"
-        >
-          GitHub
-        </Button>
+    <div className="max-w-lg mx-auto px-4 py-4 space-y-4">
+      <h1 className="text-base font-semibold">About</h1>
+      <div className="glass rounded-glass p-4 space-y-3">
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          MVHS App is an unofficial Progressive Web App for Mountain View High School,
+          providing quick access to bell schedules, the campus map, and school events.
+        </p>
+        <div className="border-t border-white/[.08] pt-3">
+          <p className="text-xs text-muted-foreground">
+            Built by students, for students.{' '}
+            <a
+              href="https://github.com/mvhs-apps/mvhs-app-pwa"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              View source on GitHub
+            </a>
+          </p>
+        </div>
       </div>
-      <CreditsContainer />
     </div>
   );
-};
-
-export default AboutPage;
+}
