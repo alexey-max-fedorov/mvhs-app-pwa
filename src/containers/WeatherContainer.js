@@ -1,102 +1,64 @@
-import moment from 'moment';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Weather from '../components/Weather/Weather.js';
 
-type Props = {
-  date: moment.Moment
-};
+const url = 'https://api.weather.gov/gridpoints/MTR/96,105/forecast/hourly';
+const request = new Request(url, { method: 'GET', headers: { Accept: 'application/json' } });
 
-type State = {};
+let cache;
 
-let cache: CacheStorage;
-// https://api.weather.gov/gridpoints/MTR/96,105/forecast/hourly
-const url = `https://api.weather.gov/gridpoints/MTR/96,105/forecast/hourly`;
-const request = new Request(url, {
-  method: 'GET',
-  headers: {
-    Accept: 'application/json'
-  }
-});
-
-class WeatherContainer extends React.PureComponent<Props, State> {
-  state = {
-    loading: true,
-    weather: [],
-    error: ''
-  };
-
-  componentDidMount() {
-    this.getWeather();
-  }
-
-  componentWillUnmount() {}
-
-  componentDidUpdate(prevProps: Props) {
-    if (this.props.date && !this.props.date.isSame(prevProps.date)) {
-      this.getWeather();
+async function fetchWeatherPeriods() {
+  if (!cache) cache = await caches.open('weather');
+  let response = await cache.match(request);
+  if (!response || new Date(response.headers.get('expires')) < Date.now()) {
+    try {
+      await cache.add(request);
+    } catch (err) {
+      console.error('Weather fetch failed:', err);
+      return null;
     }
+    response = await cache.match(request);
   }
-
-  getWeather = async () => {
-    if (!cache) {
-      cache = await caches.open('weather');
-    }
-    const { date } = this.props;
-    this.setState({
-      loading: true,
-      error: ''
-    });
-    let response = await cache.match(request);
-    let weatherPeriods;
-    // if response does not exist or if the expires date is before the current date
-    response &&
-      new Date(new Date(response.headers.get('Expires')) - Date.now())
-        .toISOString({
-          timeZone: 'UTC'
-          // only show the time
-        })
-        .slice(14, 19);
-    if (!response || new Date(response.headers.get('expires')) < Date.now()) {
-      try {
-        await cache.add(request);
-      } catch (err) {
-        console.log(err);
-        this.setState({
-          error: err.message
-        });
-        return [];
-      }
-      response = await cache.match(request);
-    }
-    if (response) {
-      const weather = await response.json();
-      weatherPeriods = weather.properties.periods;
-    }
-    // filter periods to only include 8:00 am, 12:00 pm, and 3:00 pm
-    // on the current date
-    const periodsForToday = weatherPeriods.filter((period, index) => {
-      const time = period.startTime.slice(11, 13);
-      return (
-        (time === '08' || time === '12' || time === '15') &&
-        period.startTime.slice(0, 10) === date.format('YYYY-MM-DD')
-      );
-    });
-    this.setState({
-      loading: false,
-      weather: periodsForToday
-    });
-  };
-
-  render() {
-    return (
-      <div className="weather">
-        <Weather
-          loading={this.state.loading}
-          weather={this.state.weather}
-          error={this.state.error}
-        />
-      </div>
-    );
-  }
+  if (!response) return null;
+  const json = await response.json();
+  return json?.properties?.periods ?? null;
 }
-export default WeatherContainer;
+
+function pickCurrentPeriod(periods) {
+  if (!periods || periods.length === 0) return null;
+  const now = new Date();
+  // Find the period whose window contains now, else take the nearest upcoming
+  return (
+    periods.find((p) => new Date(p.startTime) <= now && now < new Date(p.endTime)) ||
+    periods.find((p) => new Date(p.startTime) > now) ||
+    periods[0]
+  );
+}
+
+export default function WeatherContainer() {
+  const [weatherProps, setWeatherProps] = useState(null);
+
+  useEffect(() => {
+    fetchWeatherPeriods().then((periods) => {
+      if (!periods) return;
+      const period = pickCurrentPeriod(periods);
+      if (!period) return;
+
+      // Find day high/low from today's periods
+      const today = new Date().toISOString().slice(0, 10);
+      const todayPeriods = periods.filter((p) => p.startTime.slice(0, 10) === today);
+      const temps = todayPeriods.map((p) => p.temperature);
+      const high = temps.length ? Math.max(...temps) : null;
+      const low = temps.length ? Math.min(...temps) : null;
+
+      setWeatherProps({
+        temp: period.temperature,
+        description: period.shortForecast,
+        icon: period.shortForecast,
+        high,
+        low,
+      });
+    });
+  }, []);
+
+  return <Weather {...(weatherProps || {})} />;
+}

@@ -1,118 +1,68 @@
-import * as React from 'react';
+import React from 'react';
+import { cn } from '../utils/cn';
 
-import './Calendar.css';
-
-import Paper from 'material-ui/Paper';
-import Avatar from 'material-ui/Avatar';
-import CircularProgress from 'material-ui/Progress/CircularProgress';
-import List from 'material-ui/List/List';
-import ListItem from 'material-ui/List/ListItem';
-import ListItemText from 'material-ui/List/ListItemText';
-import ListItemAvatar from 'material-ui/List/ListItemAvatar';
-import MapIcon from 'material-ui-icons/Map';
-import Button from 'material-ui/Button';
-
-import FormControl from 'material-ui/Form/FormControl';
-import Select from 'material-ui/Select';
-import Input from 'material-ui/Input';
-
-import Loadable from './LCEComponent';
-import Card from './Card';
-
-const Empty = <div className="card-padding center">No events</div>;
-const Loading = (
-  <div className="card-padding center">
-    <CircularProgress />
-  </div>
-);
-const Error = (error: string) => (
-  <div className="card-padding center">{error}</div>
-);
-
-type Props = {
-  loading: boolean,
-  events: Array<any>,
-  error: any,
-  options: { [string]: string },
-  selectedOption: string,
-  onHandleChange: e => {}
-};
-
-const Calendar = ({
-  loading,
-  events,
-  error,
-  options,
-  selectedOption,
-  onHandleChange
-}: Props) => {
+function EventCard({ summary, start, end, description }) {
   return (
-    <div className="calendar">
-      <Paper>
-        <FormControl className="calendar-form">
-          <Select
-            className="calendar-select"
-            native={true}
-            value={selectedOption}
-            onChange={onHandleChange}
-            input={<Input />}
-          >
-            {Object.keys(options).map((calendarName, index) => (
-              <option key={calendarName} value={calendarName}>
-                {calendarName}
-              </option>
-            ))}
-          </Select>
-        </FormControl>
-
-        <Loadable
-          loading={loading}
-          data={events}
-          error={error}
-          LoadingComponent={Loading}
-          EmptyComponent={Empty}
-          ErrorComponent={Error(error)}
-        >
-          <List>
-            {events.map((event, index) => {
-              return (
-                <ListItem
-                  key={event.id}
-                  dense={false}
-                  divider={index !== events.length - 1}
-                >
-                  <ListItemText
-                    className="calendar-desc"
-                    primary={`${event.summary} • ${event.start} - ${event.end}`}
-                    secondary={extractText(event.description)}
-                  />
-                </ListItem>
-              );
-            })}
-          </List>
-        </Loadable>
-      </Paper>
-      &nbsp;&nbsp;Calendar Source -{' '}
-      <a
-        href="https://mvhs.mvla.net/206062_3"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Link
-      </a>
+    <div className="glass rounded-glass p-3">
+      <div className="flex items-start justify-between gap-2">
+        <p className="text-sm font-medium text-foreground leading-snug">{summary}</p>
+        <span className="text-xs font-mono text-muted-foreground whitespace-nowrap tabular-nums shrink-0">
+          {start === end ? start : `${start} – ${end}`}
+        </span>
+      </div>
+      {description && (
+        <p className="text-xs text-muted-foreground mt-1 leading-relaxed">{description}</p>
+      )}
     </div>
   );
-};
-
-function extractText(str) {
-  if (str != null) {
-    str = str.replace(/<br>/g, ' ');
-    var txt = document.createElement('text');
-    txt.innerHTML = str;
-    return txt.textContent;
-  } else {
-    return str;
-  }
 }
 
-export default Calendar;
+export default function Calendar({ loading, events, error, options, selectedOption, onHandleChange }) {
+  return (
+    <div className="space-y-2">
+      {/* Calendar selector */}
+      {options && Object.keys(options).length > 1 && (
+        <select
+          value={selectedOption}
+          onChange={onHandleChange}
+          className="w-full h-9 px-3 rounded-lg bg-white/5 border border-white/[.08] text-sm text-foreground focus:outline-none focus:border-primary/50 transition-colors"
+        >
+          {Object.keys(options).map((name) => (
+            <option key={name} value={name} className="bg-[#111113] text-foreground">
+              {name}
+            </option>
+          ))}
+        </select>
+      )}
+
+      {/* States */}
+      {loading && (
+        <div className="glass rounded-glass p-6 flex justify-center">
+          <div className="w-5 h-5 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+        </div>
+      )}
+
+      {!loading && error && (
+        <div className="glass rounded-glass p-4 text-sm text-muted-foreground text-center">
+          {error}
+        </div>
+      )}
+
+      {!loading && !error && events.length === 0 && (
+        <div className="glass rounded-glass p-6 text-center text-muted-foreground text-sm">
+          No events today
+        </div>
+      )}
+
+      {!loading && !error && events.map((event) => (
+        <EventCard
+          key={event.id}
+          summary={event.summary}
+          start={event.start}
+          end={event.end}
+          description={event.description}
+        />
+      ))}
+    </div>
+  );
+}
