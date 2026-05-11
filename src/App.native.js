@@ -1,110 +1,61 @@
-// @flow
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Text } from 'react-native';
+import { colors } from './theme.native';
 
-import * as React from 'react';
-
-import { View, Text, StyleSheet, StatusBar, Platform } from 'react-native';
-import { TabViewAnimated, TabBar, SceneMap } from 'react-native-tab-view';
-import { COLOR, ThemeProvider, Toolbar } from 'react-native-material-ui';
-
+// Lazy imports for tab screens
 import SchedulePageContainer from './containers/SchedulePageContainer';
-import Map from './components/Map.native';
-import Icon from './components/Icon.native';
+import MapContainer from './containers/MapContainer';
+import Links from './components/Links';
+import AboutPage from './components/AboutPage';
+import SettingsPage from './components/Settings';
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLOR.grey100
-  },
-  statusBar: {
-    backgroundColor: COLOR.amber500,
-    height: Platform.OS === 'ios' ? 20 : 24
-  },
-  tabBar: {
-    backgroundColor: COLOR.amber500
-  },
-  tabLabel: {
-    color: 'rgba(0, 0, 0, 0.87)'
-  },
-  tabIndicator: {
-    backgroundColor: COLOR.blue500
-  }
-});
+const Tab = createBottomTabNavigator();
 
-const uiTheme = {
-  fontFamily: null,
-  palette: {
-    primaryColor: COLOR.amber500,
-    accentColor: COLOR.blue500
-  },
-  toolbar: {
-    container: {
-      height: 56,
-      elevation: 0
-    },
-    titleText: {
-      color: 'rgba(0, 0, 0, 0.87)'
-    }
-  }
+const NAV_ICONS = {
+  Schedule: '◉',
+  Map: '⊡',
+  Links: '⊞',
+  About: 'ⓘ',
+  Settings: '⚙',
 };
 
-const ScheduleRoute = () => <SchedulePageContainer />;
-const MapRoute = () => <Map />;
-
-type State = {
-  index: number,
-  routes: { key: string, icon: string }[]
-};
-
-class App extends React.PureComponent<void, State> {
-  state = {
-    index: 0,
-    routes: [
-      { key: 'schedule', icon: 'notifications' },
-      { key: 'map', icon: 'map' }
-    ]
-  };
-
-  handleIndexChange = (index: number) => this.setState({ index });
-
-  renderHeader = (props: any) => (
-    <TabBar
-      labelStyle={styles.tabLabel}
-      style={styles.tabBar}
-      indicatorStyle={styles.tabIndicator}
-      renderIcon={this.renderIcon}
-      {...props}
-    />
+export default function App() {
+  return (
+    <SafeAreaProvider>
+      <NavigationContainer>
+        <Tab.Navigator
+          screenOptions={({ route }) => ({
+            headerStyle: {
+              backgroundColor: colors.background,
+              borderBottomColor: colors.border,
+              borderBottomWidth: 1,
+            },
+            headerTintColor: colors.foreground,
+            headerTitleStyle: { fontWeight: '600', fontSize: 16 },
+            tabBarStyle: {
+              backgroundColor: 'rgba(5,5,6,0.85)',
+              borderTopColor: colors.border,
+              borderTopWidth: 1,
+            },
+            tabBarActiveTintColor: colors.primary,
+            tabBarInactiveTintColor: colors.muted,
+            tabBarShowLabel: true,
+            tabBarLabelStyle: { fontSize: 11 },
+            tabBarIcon: ({ color }) => (
+              <Text style={{ color, fontSize: 18 }}>{NAV_ICONS[route.name]}</Text>
+            ),
+          })}
+        >
+          <Tab.Screen name="Schedule" component={SchedulePageContainer} />
+          <Tab.Screen name="Map" component={MapContainer} />
+          <Tab.Screen name="Links" component={Links} />
+          <Tab.Screen name="About" component={AboutPage} />
+          <Tab.Screen name="Settings" component={SettingsPage} />
+        </Tab.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
-
-  renderIcon = ({ route }: any) => {
-    return <Icon>{route.icon}</Icon>;
-  };
-
-  renderScene = SceneMap({
-    schedule: ScheduleRoute,
-    map: MapRoute
-  });
-
-  render() {
-    return (
-      <ThemeProvider uiTheme={uiTheme}>
-        <View style={styles.container}>
-          <StatusBar
-            barStyle={Platform.OS === 'ios' ? 'dark-content' : 'light-content'}
-          />
-          <View style={[styles.statusBar]} />
-          <Toolbar centerElement="MVHS App" />
-          <TabViewAnimated
-            style={styles.container}
-            navigationState={this.state}
-            renderScene={this.renderScene}
-            renderHeader={this.renderHeader}
-            onIndexChange={this.handleIndexChange}
-          />
-        </View>
-      </ThemeProvider>
-    );
-  }
 }
-
-export default App;

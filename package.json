@@ -7,6 +7,8 @@
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",
     "@radix-ui/react-tabs": "^1.1.13",
+    "@react-navigation/bottom-tabs": "^6.6.1",
+    "@react-navigation/native": "^6.1.18",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "expo": "^23.0.0",
@@ -22,6 +24,8 @@
     "react-native": "^0.50.0",
     "react-native-datepicker": "^1.6.0",
     "react-native-material-ui": "^1.14.0",
+    "react-native-safe-area-context": "^5.7.0",
+    "react-native-screens": "^4.24.0",
     "react-native-tab-view": "0.0.69",
     "react-redux": "^5.0.6",
     "react-router": "^4.2.0",

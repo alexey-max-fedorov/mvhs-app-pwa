@@ -1,160 +1,70 @@
-// @flow
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import { colors, spacing, radius } from '../theme.native';
 
-import * as React from 'react';
-
-import { Text, View, StyleSheet, ActivityIndicator } from 'react-native';
-import { COLOR, Card } from 'react-native-material-ui';
-import Loadable from './LCEComponent';
-
-export type Period = {
-  period: string,
-  time: string
-};
-
-type Props = {
-  loading: boolean,
-  periods: Period[],
-  scheduleName: string
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: COLOR.grey100
-  },
-  spinner: {
-    padding: 16
-  },
-  emptyText: {
-    padding: 24,
-    textAlign: 'center'
-  },
-  columnsContainer: {
-    flex: 1,
-    flexDirection: 'row'
-  },
-  column: {
-    flex: 1,
-    flexDirection: 'column'
-  },
-  row: {
-    height: 48,
-    borderBottomColor: 'rgba(0,0,0,0.12)',
-    borderBottomWidth: 1,
-    justifyContent: 'center',
-    paddingHorizontal: 32
-  },
-  rowText: {
-    fontSize: 13
-  },
-  numericRowText: {
-    textAlign: 'right'
-  },
-  headingRow: {
-    height: 56,
-    marginTop: 8
-  },
-  headingRowText: {
-    fontWeight: '500',
-    color: 'rgba(0,0,0,0.54)',
-    fontSize: 12
-  },
-  scheduleName: {
-    fontSize: 21,
-    fontWeight: '500',
-    textAlign: 'center',
-    paddingTop: 24
-  }
-});
-
-const Column = ({ children, ...props }) => (
-  <View style={styles.column} {...props}>
-    {children}
-  </View>
-);
-
-const HeadingRow = props => (
-  <Row style={styles.headingRow} textStyle={styles.headingRowText} {...props} />
-);
-
-const Row = ({ style, ...props }: { style?: any }) => (
-  <View style={[styles.row, style]} {...props}>
-    <Text
-      style={[
-        styles.rowText,
-        props.numeric && styles.numericRowText,
-        props.textStyle
-      ]}
-    >
-      {props.children}
-    </Text>
-  </View>
-);
-
-const Loading = (
-  <ActivityIndicator
-    color={COLOR.amber500}
-    size="large"
-    style={styles.spinner}
-  />
-);
-
-const Empty = (
-  <View>
-    <Text style={styles.emptyText}>No school!</Text>
-  </View>
-);
-
-const BellSchedule = ({ periods, loading, scheduleName }: Props) => {
-  const cardStyle = {
-    container: [
-      {
-        height: loading || periods.length === 0 ? 64 : periods.length * 48 + 116
-      }
-    ]
-  };
+function PeriodCard({ name, start, end, isCurrent, progress }) {
   return (
-    <View className="bell-schedule" style={styles.container}>
-      <Card style={cardStyle}>
-        <Loadable
-          loading={loading}
-          data={periods}
-          LoadingComponent={Loading}
-          EmptyComponent={Empty}
-        >
-          <View>
-            {scheduleName !== 'none' && (
-              <View>
-                <Text style={styles.scheduleName}>{scheduleName}</Text>
-              </View>
-            )}
-
-            <View style={styles.columnsContainer}>
-              {/*Period column*/}
-              <Column>
-                <HeadingRow numeric={true}>Period</HeadingRow>
-                {periods.map(n => {
-                  return (
-                    <Row key={n.period} numeric={true}>
-                      {n.period}
-                    </Row>
-                  );
-                })}
-              </Column>
-
-              {/*Time column*/}
-              <Column>
-                <HeadingRow>Time</HeadingRow>
-                {periods.map(n => {
-                  return <Row key={n.period}>{n.time}</Row>;
-                })}
-              </Column>
-            </View>
-          </View>
-        </Loadable>
-      </Card>
+    <View style={[styles.card, isCurrent && styles.cardActive]}>
+      <View style={styles.row}>
+        <Text style={[styles.name, isCurrent && { color: colors.primary }]}>{name}</Text>
+        <Text style={styles.time}>{start} – {end}</Text>
+      </View>
+      {isCurrent && (
+        <View style={styles.progressBg}>
+          <View style={[styles.progressFill, { width: `${Math.max(1, progress)}%` }]} />
+        </View>
+      )}
     </View>
   );
-};
+}
 
-export default BellSchedule;
+export default function BellSchedule({ periods, currentPeriod, scheduleName }) {
+  if (!periods?.length) {
+    return (
+      <View style={styles.card}>
+        <Text style={{ color: colors.muted, textAlign: 'center', fontSize: 14 }}>No school today</Text>
+      </View>
+    );
+  }
+  return (
+    <View style={{ gap: spacing.sm }}>
+      {scheduleName && (
+        <Text style={{ color: colors.muted, fontSize: 12, marginBottom: spacing.xs }}>
+          Schedule: <Text style={{ color: colors.foreground, fontWeight: '500' }}>{scheduleName}</Text>
+        </Text>
+      )}
+      {periods.map((p) => (
+        <PeriodCard
+          key={p.name}
+          name={p.name}
+          start={p.start}
+          end={p.end}
+          isCurrent={currentPeriod?.name === p.name}
+          progress={currentPeriod?.name === p.name ? currentPeriod.progress : 0}
+        />
+      ))}
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  card: {
+    backgroundColor: colors.surface,
+    borderWidth: 1,
+    borderColor: colors.border,
+    borderRadius: radius.md,
+    padding: spacing.md,
+  },
+  cardActive: { borderColor: 'rgba(245,158,11,0.3)' },
+  row: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' },
+  name: { color: colors.foreground, fontWeight: '500', fontSize: 14 },
+  time: { color: colors.muted, fontSize: 12 },
+  progressBg: {
+    height: 4,
+    backgroundColor: 'rgba(255,255,255,0.1)',
+    borderRadius: 2,
+    marginTop: spacing.sm,
+    overflow: 'hidden',
+  },
+  progressFill: { height: '100%', backgroundColor: colors.primary, borderRadius: 2 },
+});
