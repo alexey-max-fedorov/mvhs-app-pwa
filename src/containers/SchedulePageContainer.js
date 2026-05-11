@@ -1,92 +1,36 @@
-// @flow
-
-import React from 'react';
-
+import React, { useState, useRef } from 'react';
 import moment from 'moment';
 import SchedulePage from '../components/SchedulePage';
-import * as appstate from '../utils/appstate';
-import Swipe from 'react-easy-swipe';
-import isInclusivelyAfterDay from 'react-dates/lib/utils/isInclusivelyAfterDay';
+import BellScheduleContainer from './BellScheduleContainer';
+import CalendarContainer from './CalendarContainer';
+import WeatherContainer from './WeatherContainer';
 
-type State = {
-  date: moment$Moment
-};
+export default function SchedulePageContainer() {
+  const [date, setDate] = useState(() => moment());
+  const touchStartX = useRef(null);
 
-class SchedulePageContainer extends React.PureComponent<{}, State> {
-  state = {
-    date: moment(),
-    lastX: 0,
-    lastY: 0
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
   };
 
-  handleDateChange = (date: moment$Moment) => {
-    this.setState({
-      date: date
-    });
-  };
-
-  componentDidMount() {
-    appstate.addOnResumeListener(() => {
-      //If the selected date is in the past, change to the current day
-      if (this.state.date.diff(moment().startOf('day')) < 0) {
-        this.setState({
-          date: moment()
-        });
-        console.log('Outdated, switching to today');
-      }
-    });
-  }
-
-  onSwipeMove = (position, event) => {
-    console.log('move ', event);
-    console.log(`Moved ${position.x} pixels horizontally`, event);
-    console.log(`Moved ${position.y} pixels vertically`, event);
-    this.state.lastX = position.x;
-    this.state.lastY = position.y;
-  };
-
-  onSwipeEnd = event => {
-    console.log('end X', this.state.lastX);
-    console.log('end Y', this.state.lastY);
-    //console.log(`Moved ${position.x} pixels horizontally`, event);
-    //console.log(`Moved ${position.y} pixels vertically`, event);
-
-    if (Math.abs(this.state.lastY) < 35 && Math.abs(this.state.lastX) > 22) {
-      //console.log("swipe");
-      const twoWeeksLater = moment().add(2, 'weeks');
-      const currentDate = this.state.date.clone();
-      var newDate = currentDate;
-      if (this.state.lastX < 0) {
-        newDate = currentDate.add(1, 'day');
-      } else if (this.state.lastX > 0) {
-        newDate = currentDate.subtract(1, 'day');
-      }
-      if (
-        isInclusivelyAfterDay(newDate, moment()) &&
-        !isInclusivelyAfterDay(newDate, twoWeeksLater)
-      ) {
-        this.handleDateChange(newDate);
-      }
+  const handleTouchEnd = (e) => {
+    if (touchStartX.current === null) return;
+    const delta = e.changedTouches[0].clientX - touchStartX.current;
+    if (Math.abs(delta) > 50) {
+      setDate((d) => d.clone().add(delta < 0 ? 1 : -1, 'day'));
     }
-
-    this.state.lastX = 0;
-    this.state.lastY = 0;
+    touchStartX.current = null;
   };
 
-  render() {
-    return (
-      <Swipe
-        onSwipeEnd={this.onSwipeEnd}
-        onSwipeMove={this.onSwipeMove}
-        style={{ display: 'flex', width: '100%', justifyContent: 'center' }}
-      >
-        <SchedulePage
-          date={this.state.date}
-          onDateChange={this.handleDateChange}
-        />
-      </Swipe>
-    );
-  }
+  return (
+    <div onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+      <SchedulePage
+        date={date}
+        onDateChange={setDate}
+        bellSchedule={<BellScheduleContainer date={date} />}
+        calendar={<CalendarContainer date={date} />}
+        weather={<WeatherContainer />}
+      />
+    </div>
+  );
 }
-
-export default SchedulePageContainer;

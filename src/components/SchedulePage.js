@@ -1,59 +1,53 @@
-// @flow
-
 import React from 'react';
-import Loadable from 'react-loadable';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-import './SchedulePage.css';
+export default function SchedulePage({ date, onDateChange, bellSchedule, calendar, weather }) {
+  const isToday = date.isSame(new Date(), 'day');
 
-import Disclaimer from './Disclaimer';
-
-import type Moment from 'moment';
-
-type Props = {
-  date: Moment,
-  onDateChange: (date: Moment) => void
-};
-
-const AsyncBellSchedule = Loadable({
-  loader: () =>
-    import(/* webpackChunkName: "bell-schedule" */ '../containers/BellScheduleContainer'),
-  loading: () => null
-});
-
-const AsyncDatePicker = Loadable({
-  loader: () =>
-    import(/* webpackChunkName: "date-picker" */ '../containers/DatePickerContainer'),
-  loading: () => null
-});
-
-const AsyncCalendar = Loadable({
-  loader: () =>
-    import(/* webpackChunkName: "calendar-events" */ '../containers/CalendarContainer'),
-  loading: () => null
-});
-
-const AsyncWeather = Loadable({
-  loader: () =>
-    import(/* webpackChunkName: "weather" */ '../containers/WeatherContainer'),
-  loading: () => null
-});
-
-const AsyncCovidLinks = Loadable({
-  loader: () =>
-    import(/* webpackChunkName: "covid-links" */ '../containers/CovidLinksContainer'),
-  loading: () => null
-});
-
-const SchedulePage = ({ date, onDateChange }: Props) => {
   return (
-    <div className="schedule-page">
-      <AsyncDatePicker date={date} onDateChange={onDateChange} />
-      <AsyncBellSchedule date={date} />
-      <AsyncCalendar date={date} />
-      <AsyncWeather date={date} />
-      <Disclaimer />
+    <div className="max-w-lg mx-auto px-4 py-4 space-y-4">
+      {/* Date navigator */}
+      <div className="flex items-center justify-between">
+        <button
+          onClick={() => onDateChange(date.clone().subtract(1, 'day'))}
+          className="p-2 rounded-full glass transition-colors hover:text-primary"
+          aria-label="Previous day"
+        >
+          <ChevronLeft size={20} />
+        </button>
+        <div className="text-center">
+          <p className="font-semibold">
+            {isToday ? 'Today' : date.format('dddd')}
+          </p>
+          <p className="text-xs text-muted-foreground mt-0.5">{date.format('MMMM D, YYYY')}</p>
+        </div>
+        <button
+          onClick={() => onDateChange(date.clone().add(1, 'day'))}
+          className="p-2 rounded-full glass transition-colors hover:text-primary"
+          aria-label="Next day"
+        >
+          <ChevronRight size={20} />
+        </button>
+      </div>
+
+      {/* Weather */}
+      {weather}
+
+      {/* Bell schedule */}
+      <section>
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-2 px-1">
+          Bell Schedule
+        </h2>
+        {bellSchedule}
+      </section>
+
+      {/* Calendar events */}
+      <section>
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-2 px-1">
+          Events
+        </h2>
+        {calendar}
+      </section>
     </div>
   );
-};
-
-export default SchedulePage;
+}
