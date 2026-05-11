@@ -62,6 +62,10 @@ export default defineConfig({
       loader: { '.js': 'jsx' },
     },
   },
+  test: {
+    environment: 'node',
+    globals: false,
+  },
   build: {
     outDir: 'dist',
     rollupOptions: {
