@@ -1,124 +1,86 @@
-//@ flow
+import React, { useState, useEffect } from 'react';
+import { useBarcode } from 'react-hooks-barcode';
+import * as storage from '../utils/storage';
 
-import { Typography } from 'material-ui';
-import Radio from 'material-ui/Radio';
-import RadioGroup from 'material-ui/Radio/RadioGroup';
-import TextField from 'material-ui/TextField';
-import { FormControlLabel, FormLabel } from 'material-ui';
-
-import React from 'react';
-import ReactDOM from 'react-dom';
-
-import './Settings.css';
-import { FormControl } from 'material-ui';
-import Barcode from 'react-hooks-barcode';
-
-const defaultValues = {
-  name: '',
-  id: '1000',
-  staffOrStudent: 'student'
-};
-class Settings extends React.PureComponent {
-  constructor(props) {
-    super(props);
-    this.state = {
-      ...defaultValues
-    };
-    const settings = localStorage.getItem('settings');
-    if (settings) {
-      this.state = JSON.parse(settings);
-    } else {
-      const settings = {
-        ...defaultValues
-      };
-      localStorage.setItem('settings', JSON.stringify(settings));
-    }
-    // add event listener to localStorage
-    window.addEventListener('storage', this.onStorageChange);
-  }
-  onStorageChange = event => {
-    if (event.key === 'settings') {
-      this.setState(JSON.parse(event.newValue));
-    }
-  };
-  componentWillUnmount() {
-    window.removeEventListener('storage', this.onStorageChange);
-  }
-  handleChange = event => {
-    this.setState({
-      [event.target.id]: event.target.value
-    });
-    console.log(event.target.name);
-    const currentSettings = JSON.parse(localStorage.getItem('settings'));
-    currentSettings[event.target.id] = event.target.value;
-    localStorage.setItem('settings', JSON.stringify(currentSettings));
-  };
-  handleRadioChange = event => {
-    this.setState({
-      staffOrStudent: event.target.value
-    });
-    const currentSettings = JSON.parse(localStorage.getItem('settings'));
-    currentSettings.staffOrStudent = event.target.value;
-    localStorage.setItem('settings', JSON.stringify(currentSettings));
-  };
-  render() {
-    return (
-      <div className="settings-container">
-        <Typography type="headline" component="h2">
-          Settings
-        </Typography>
-
-        <FormControl>
-          <RadioGroup
-            row
-            id="staffOrStudent"
-            value={this.state.staffOrStudent}
-            defaultValue={'student'}
-            onChange={this.handleRadioChange}
-          >
-            <FormControlLabel
-              name="staffOrStudent"
-              value="student"
-              control={<Radio />}
-              label="Student"
-            />
-            <FormControlLabel
-              name="staffOrStudent"
-              value="staff"
-              control={<Radio />}
-              label="Staff"
-            />
-          </RadioGroup>
-        </FormControl>
-        {this.state.staffOrStudent == 'student' &&
-          this.state.id != '' && <Barcode value={this.state.id} />}
-        <br />
-        <TextField
-          id="name"
-          label="Last Name, First Name"
-          onChange={this.handleChange}
-          value={this.state.name}
-          margin="normal"
-        />
-        <br />
-        {this.state.staffOrStudent == 'student' && (
-          <TextField
-            id="id"
-            label="ID #"
-            onChange={this.handleChange}
-            value={this.state.id}
-            margin="normal"
-          />
-        )}
-        <br />
-        <br />
-        <Typography type="body1" component="p" align="center" className="">
-          Fill out your information above to enable customization and features
-          such as form autofill. No data is saved online. It is cached locally
-          on your device.
-        </Typography>
-      </div>
-    );
-  }
+function Barcode({ value }) {
+  const { inputRef } = useBarcode({
+    value,
+    options: {
+      displayValue: false,
+      background: 'transparent',
+      lineColor: '#F59E0B',
+    },
+  });
+  return <svg ref={inputRef} className="w-full max-w-xs mx-auto block" />;
 }
-export default Settings;
+
+export default function Settings() {
+  const [name, setName] = useState('');
+  const [studentId, setStudentId] = useState('');
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
+    storage.getItem('studentName').then((v) => v && setName(v));
+    storage.getItem('studentId').then((v) => v && setStudentId(v));
+  }, []);
+
+  const handleSave = async () => {
+    await storage.setItem('studentName', name);
+    await storage.setItem('studentId', studentId);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  };
+
+  return (
+    <div className="max-w-lg mx-auto px-4 py-4 space-y-5">
+      <h1 className="text-base font-semibold">Settings</h1>
+
+      {/* Profile form */}
+      <div className="glass rounded-glass p-4 space-y-4">
+        <h2 className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground">
+          Profile
+        </h2>
+        <div className="space-y-1">
+          <label className="text-xs text-muted-foreground" htmlFor="name">Name</label>
+          <input
+            id="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Your name"
+            className="w-full h-10 px-3 rounded-lg bg-white/5 border border-white/[.08] text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors"
+          />
+        </div>
+        <div className="space-y-1">
+          <label className="text-xs text-muted-foreground" htmlFor="studentId">Student ID</label>
+          <input
+            id="studentId"
+            type="text"
+            inputMode="numeric"
+            value={studentId}
+            onChange={(e) => setStudentId(e.target.value)}
+            placeholder="Student ID number"
+            className="w-full h-10 px-3 rounded-lg bg-white/5 border border-white/[.08] text-sm font-mono text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors"
+          />
+        </div>
+        <button
+          onClick={handleSave}
+          className="w-full h-10 rounded-lg bg-primary text-black font-semibold text-sm transition-all hover:bg-primary/90 active:scale-[0.98]"
+        >
+          {saved ? 'Saved ✓' : 'Save'}
+        </button>
+      </div>
+
+      {/* Library barcode */}
+      {studentId.length > 0 && (
+        <div className="glass rounded-glass p-4">
+          <h2 className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-4">
+            Library Barcode
+          </h2>
+          <Barcode value={studentId} />
+          <p className="text-xs text-center text-muted-foreground mt-2 font-mono">{studentId}</p>
+        </div>
+      )}
+    </div>
+  );
+}
