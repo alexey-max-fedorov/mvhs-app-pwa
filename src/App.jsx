@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
-import { Bell, Map, Link, Info, Barcode, Bot } from 'lucide-react';
+import { Bell, Map, Link, Info, Barcode, Bot, Sun, Moon } from 'lucide-react';
+import { useTheme } from './utils/useTheme.js';
 import logo from './assets/outlinelogo.svg';
 
 const CLAUDE_SKILL_URL =
@@ -29,6 +30,8 @@ function PageLoader() {
 }
 
 export default function App() {
+  const { theme, toggle } = useTheme();
+
   return (
     <BrowserRouter>
       <div className="flex flex-col min-h-dvh bg-background text-foreground">
@@ -36,12 +39,23 @@ export default function App() {
         <header className="glass-nav sticky top-0 z-40 flex items-center gap-3 px-4 py-3 border-b border-white/[.08]">
           <img src={logo} className="h-7 w-7" alt="MVHS Logo" />
           <span className="text-base font-semibold tracking-tight">MVHS</span>
+          <button
+            onClick={toggle}
+            title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            className="ml-auto p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+          >
+            {theme === 'dark' ? (
+              <Sun size={20} strokeWidth={1.75} />
+            ) : (
+              <Moon size={20} strokeWidth={1.75} />
+            )}
+          </button>
           <a
             href={CLAUDE_SKILL_URL}
             target="_blank"
             rel="noopener noreferrer"
             title="Install Claude Skill"
-            className="ml-auto p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+            className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
           >
             <Bot size={20} strokeWidth={1.75} />
           </a>
