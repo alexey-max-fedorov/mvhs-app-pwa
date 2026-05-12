@@ -1,6 +1,6 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter, Routes, Route, NavLink } from 'react-router-dom';
-import { Bell, Map, Link, Info, Settings, Bot } from 'lucide-react';
+import { Bell, Map, Link, Info, Barcode, Bot } from 'lucide-react';
 import logo from './assets/outlinelogo.svg';
 
 const CLAUDE_SKILL_URL =
@@ -16,8 +16,8 @@ const NAV = [
   { to: '/', icon: Bell, label: 'Schedule', end: true },
   { to: '/map', icon: Map, label: 'Map' },
   { to: '/links', icon: Link, label: 'Links' },
+  { to: '/barcode', icon: Barcode, label: 'Barcode' },
   { to: '/about', icon: Info, label: 'About' },
-  { to: '/settings', icon: Settings, label: 'Settings' },
 ];
 
 function PageLoader() {
@@ -55,7 +55,7 @@ export default function App() {
               <Route path="/map" element={<MapPage />} />
               <Route path="/links" element={<LinksPage />} />
               <Route path="/about" element={<AboutPage />} />
-              <Route path="/settings" element={<SettingsPage />} />
+              <Route path="/barcode" element={<SettingsPage />} />
             </Routes>
           </Suspense>
         </main>
