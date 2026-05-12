@@ -3,15 +3,29 @@
 @tailwind utilities;
 
 @layer base {
+  /* Light mode (default) */
   :root {
-    /* dark glassmorphism palette */
+    --background: 248 248 250;
+    --foreground: 15 15 18;
+    --card: 0 0 0;            /* used at low opacity via bg-card/5 */
+    --border: 0 0 0;          /* used at low opacity via border-border/[.08] */
+    --primary: 245 158 11;    /* amber */
+    --primary-foreground: 0 0 0;
+    --secondary: 59 130 246;  /* blue */
+    --secondary-foreground: 255 255 255;
+    --muted: 230 231 236;
+    --muted-foreground: 90 95 108;
+  }
+
+  /* Dark mode */
+  .dark {
     --background: 5 5 6;
     --foreground: 237 237 239;
-    --card: 255 255 255;       /* used at low opacity via bg-card/5 */
-    --border: 255 255 255;     /* used at low opacity via border-border/[.08] */
-    --primary: 245 158 11;     /* amber */
+    --card: 255 255 255;
+    --border: 255 255 255;
+    --primary: 245 158 11;
     --primary-foreground: 0 0 0;
-    --secondary: 59 130 246;   /* blue */
+    --secondary: 59 130 246;
     --secondary-foreground: 255 255 255;
     --muted: 31 31 35;
     --muted-foreground: 138 143 152;
@@ -31,19 +45,33 @@
 }
 
 @layer components {
-  /* Glassmorphism card */
+  /* Glassmorphism card — light mode */
   .glass {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.65);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.06);
   }
 
-  /* Frosted nav bar */
+  /* Glassmorphism card — dark mode */
+  .dark .glass {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: none;
+  }
+
+  /* Frosted nav bar — light mode */
   .glass-nav {
-    background: rgba(5, 5, 6, 0.8);
+    background: rgba(248, 248, 250, 0.88);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
+    border-color: rgba(0, 0, 0, 0.08);
+  }
+
+  /* Frosted nav bar — dark mode */
+  .dark .glass-nav {
+    background: rgba(5, 5, 6, 0.8);
     border-color: rgba(255, 255, 255, 0.08);
   }
 
