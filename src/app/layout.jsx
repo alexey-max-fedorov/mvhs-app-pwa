@@ -4,6 +4,9 @@ import '../index.css';
 export const metadata = {
   title: 'MVHS App',
   description: 'Mountain View High School student app',
+};
+
+export const viewport = {
   themeColor: '#050506',
 };
 
