@@ -191,6 +191,7 @@ export default function AboutPage() {
           <CreditCard key={c.name} {...c} />
         ))}
       </div>
+
     </div>
   );
 }
