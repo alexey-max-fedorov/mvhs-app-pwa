@@ -26,7 +26,7 @@ const CREDITS = [
   {
     name: 'Alexey Fedorov',
     role: 'Class of 2026',
-    desc: 'Redesign',
+    desc: 'Full Redesign in May 2026',
     links: {
       Website: 'https://alexey-fedorov.com',
       GitHub: 'https://github.com/alexey-max-fedorov',
