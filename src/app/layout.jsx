@@ -5,6 +5,12 @@ import '../index.css';
 export const metadata = {
   title: 'MVHS App',
   description: 'Mountain View High School student app',
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+    ],
+  },
 };
 
 export const viewport = {
