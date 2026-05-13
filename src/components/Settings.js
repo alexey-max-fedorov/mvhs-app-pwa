@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useEffect, useRef } from 'react';
 import JsBarcode from 'jsbarcode';
 import * as storage from '../utils/storage';
@@ -104,7 +105,7 @@ export default function Settings() {
       {showBarcode && (
         <div className="glass rounded-glass p-4">
           <h2 className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-4">
-            Library Barcode
+            Barcode
           </h2>
           <BarcodeErrorBoundary value={studentId}>
             <Barcode value={studentId} />

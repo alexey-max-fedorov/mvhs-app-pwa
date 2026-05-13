@@ -1,3 +1,4 @@
+'use client';
 import React, { useState, useRef, useCallback } from 'react';
 import moment from 'moment';
 import SchedulePage from '../components/SchedulePage';
