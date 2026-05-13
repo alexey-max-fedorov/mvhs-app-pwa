@@ -27,7 +27,7 @@ export default function Shell({ children }) {
   return (
     <div className="flex flex-col min-h-dvh bg-background text-foreground">
       <header className="glass-nav sticky top-0 z-40 flex items-center gap-3 px-4 py-3 border-b border-white/[.08]">
-        <img src="/outlinelogo.svg" className="h-7 w-7" alt="MVHS Logo" />
+        <img src={theme === 'dark' ? '/favicon.svg' : '/outlinelogo.svg'} className="h-7 w-7" alt="MVHS Logo" />
         <span className="text-base font-semibold tracking-tight">MVHS</span>
         <button
           onClick={toggle}
