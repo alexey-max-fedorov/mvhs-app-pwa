@@ -1,6 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ['./index.html', './src/**/*.{js,jsx}'],
+  content: [
+    './src/app/**/*.{js,jsx}',
+    './src/components/**/*.{js,jsx}',
+    './src/containers/**/*.{js,jsx}',
+  ],
   theme: {
     extend: {
       colors: {
