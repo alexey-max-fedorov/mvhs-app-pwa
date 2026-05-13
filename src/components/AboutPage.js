@@ -1,7 +1,5 @@
-'use client';
 import React from 'react';
 import { Globe, Mail, ExternalLink } from 'lucide-react';
-import { usePageTransitions } from '../utils/usePageTransitions';
 
 const CREDITS = [
   {
@@ -151,8 +149,6 @@ function CreditCard({ name, role, desc, links }) {
 }
 
 export default function AboutPage() {
-  const { enabled, toggle } = usePageTransitions();
-
   return (
     <div className="max-w-lg mx-auto px-4 py-4 space-y-4">
       <h1 className="text-base font-semibold">About</h1>
@@ -196,26 +192,6 @@ export default function AboutPage() {
         ))}
       </div>
 
-      <p className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground px-1">
-        Display
-      </p>
-
-      <div className="glass rounded-glass p-4">
-        <div className="flex items-center justify-between gap-4">
-          <div>
-            <p className="text-sm font-medium">Page transitions</p>
-            <p className="text-xs text-muted-foreground mt-0.5">Animate when switching tabs</p>
-          </div>
-          <button
-            role="switch"
-            aria-checked={enabled}
-            onClick={toggle}
-            className={`relative shrink-0 w-11 h-6 rounded-full transition-colors duration-200 ${enabled ? 'bg-primary' : 'bg-white/10'}`}
-          >
-            <span className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform duration-200 ${enabled ? 'translate-x-5' : 'translate-x-0'}`} />
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
