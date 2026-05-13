@@ -40,7 +40,7 @@ class DatePickerContainer extends React.PureComponent {
       `https://www.googleapis.com/calendar/v3/calendars/` +
       `${calendarUrls[this.state.selectedCalendar]}` +
       `/events?` +
-      `key=${import.meta.env.VITE_GOOGLE_CALENDAR_API_KEY}&` +
+      `key=${process.env.NEXT_PUBLIC_GOOGLE_CALENDAR_API_KEY}&` +
       `timeMin=${today.toISOString()}&` +
       `timeMax=${tomorrow.toISOString()}`;
 
