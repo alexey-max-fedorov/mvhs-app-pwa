@@ -3,17 +3,6 @@ import { Globe, Mail, ExternalLink } from 'lucide-react';
 
 const CREDITS = [
   {
-    name: 'Alexey Fedorov',
-    role: 'Class of 2026',
-    desc: 'Redesign',
-    links: {
-      Website: 'https://alexey-fedorov.com',
-      GitHub: 'https://github.com/alexey-max-fedorov',
-      Email: 'mailto:alexey.max.fedorov@gmail.com',
-      LinkedIn: 'https://www.linkedin.com/in/alexey-fedorov/',
-    },
-  },
-  {
     name: 'Daniel Ciao',
     role: 'CS Club VP of Tech · Class of 2018',
     desc: 'Project Lead, overall app framework and design',
@@ -32,6 +21,17 @@ const CREDITS = [
       GitHub: 'http://github.com/mbacvanski',
       Email: 'mailto:marc.bacvanski@gmail.com',
       LinkedIn: 'https://www.linkedin.com/in/mbacvanski/',
+    },
+  },
+  {
+    name: 'Alexey Fedorov',
+    role: 'Class of 2026',
+    desc: 'Redesign',
+    links: {
+      Website: 'https://alexey-fedorov.com',
+      GitHub: 'https://github.com/alexey-max-fedorov',
+      Email: 'mailto:alexey.max.fedorov@gmail.com',
+      LinkedIn: 'https://www.linkedin.com/in/alexey-fedorov/',
     },
   },
   {
@@ -153,22 +153,31 @@ export default function AboutPage() {
     <div className="max-w-lg mx-auto px-4 py-4 space-y-4">
       <h1 className="text-base font-semibold">About</h1>
 
-      <div className="glass rounded-glass p-4 space-y-3">
+      <div className="glass rounded-glass p-4 space-y-3 text-center">
+        <p className="text-base font-semibold">MVHS Computer Science Club</p>
         <p className="text-sm text-muted-foreground leading-relaxed">
-          MVHS App is an unofficial Progressive Web App for Mountain View High School,
-          providing quick access to bell schedules, the campus map, and school events.
+          Join us to help develop this app and others for the MVHS community! No programming experience necessary.
         </p>
+        <a
+          href="https://github.com/mvhs-apps/mvhs-app-pwa"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block text-xs font-semibold uppercase tracking-widest text-primary hover:underline"
+        >
+          GitHub
+        </a>
         <div className="border-t border-white/[.08] pt-3">
           <p className="text-xs text-muted-foreground">
-            Built by students, for students.{' '}
+            Information on this page may not be current. Please see the{' '}
             <a
-              href="https://github.com/mvhs-apps/mvhs-app-pwa"
+              href="https://mvhs.mvla.net"
               target="_blank"
               rel="noopener noreferrer"
               className="text-primary hover:underline"
             >
-              View source on GitHub
-            </a>
+              official school website
+            </a>{' '}
+            for authoritative info.
           </p>
         </div>
       </div>
