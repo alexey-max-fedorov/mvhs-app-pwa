@@ -32,6 +32,7 @@ export default function Shell({ children }) {
         <button
           onClick={toggle}
           title={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
           className="ml-auto p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
         >
           {theme === 'dark' ? (
@@ -55,7 +56,7 @@ export default function Shell({ children }) {
         {children}
       </main>
 
-      <nav className="glass-nav fixed bottom-0 left-0 right-0 z-50 flex items-center border-t border-white/[.08] safe-area-pb">
+      <nav aria-label="Main" className="glass-nav fixed bottom-0 left-0 right-0 z-50 flex items-center border-t border-white/[.08] safe-area-pb">
         {NAV.map(({ to, icon: Icon, label }) => (
           <NextLink
             key={to}
