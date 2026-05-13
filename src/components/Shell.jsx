@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
 import { usePathname } from 'next/navigation';
-import NextLink from 'next/link';
+import { Link as NextLink } from 'next-view-transitions';
 import { Bell, Map, Link as LinkIcon, Info, Barcode, Bot, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../utils/useTheme';
 import ClaudeSkillModal from './ClaudeSkillModal';

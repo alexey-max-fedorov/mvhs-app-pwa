@@ -1,3 +1,4 @@
+import { ViewTransitions } from 'next-view-transitions';
 import Shell from '../components/Shell';
 import '../index.css';
 
@@ -22,7 +23,9 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body>
-        <Shell>{children}</Shell>
+        <ViewTransitions>
+          <Shell>{children}</Shell>
+        </ViewTransitions>
       </body>
     </html>
   );
