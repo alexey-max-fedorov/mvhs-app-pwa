@@ -90,14 +90,14 @@
   to   { opacity: 0; }
 }
 
-::view-transition-new(root) {
+html[data-transitions="on"] ::view-transition-new(root) {
   animation: page-scale-in 200ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
-::view-transition-old(root) {
+html[data-transitions="on"] ::view-transition-old(root) {
   animation: page-fade-out 100ms ease both;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  ::view-transition-new(root),
-  ::view-transition-old(root) { animation: none; }
+  html[data-transitions="on"] ::view-transition-new(root),
+  html[data-transitions="on"] ::view-transition-old(root) { animation: none; }
 }
