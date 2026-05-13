@@ -2,9 +2,9 @@
 
 An unofficial Progressive Web App for Mountain View High School — bell schedules, campus maps, and school events.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fmvhs-apps%2Fmvhs-app-pwa&env=VITE_GOOGLE_CALENDAR_API_KEY&envDescription=Google%20Calendar%20API%20key%20for%20the%20school%20calendar)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Falexey-max-fedorov%2Fmvhs-app-pwa&env=VITE_GOOGLE_CALENDAR_API_KEY&envDescription=Google%20Calendar%20API%20key%20for%20the%20school%20calendar)
 
-Live: [mvhs.io](https://mvhs.io)
+Live: [mvhs.pro](https://mvhs.pro)
 
 ## Development
 
