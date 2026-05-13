@@ -1,11 +1,10 @@
 'use client';
+import { useState } from 'react';
 import { usePathname } from 'next/navigation';
 import NextLink from 'next/link';
 import { Bell, Map, Link as LinkIcon, Info, Barcode, Bot, Sun, Moon } from 'lucide-react';
 import { useTheme } from '../utils/useTheme';
-
-const CLAUDE_SKILL_URL =
-  'https://claude.ai/new?q=Install%20the%20skill%20from%20https%3A%2F%2Fgithub.com%2Falexey-max-fedorov%2Fmvhs-bellschedule-skill';
+import ClaudeSkillModal from './ClaudeSkillModal';
 
 const NAV = [
   { to: '/', icon: Bell, label: 'Schedule' },
@@ -18,6 +17,7 @@ const NAV = [
 export default function Shell({ children }) {
   const { theme, toggle } = useTheme();
   const pathname = usePathname();
+  const [skillModalOpen, setSkillModalOpen] = useState(false);
 
   const isActive = (to) => {
     if (to === '/') return pathname === '/';
@@ -41,16 +41,16 @@ export default function Shell({ children }) {
             <Moon size={20} strokeWidth={1.75} />
           )}
         </button>
-        <a
-          href={CLAUDE_SKILL_URL}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={() => setSkillModalOpen(true)}
           title="Install Claude Skill"
+          aria-label="Install Claude Skill"
           className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
         >
           <Bot size={20} strokeWidth={1.75} />
-        </a>
+        </button>
       </header>
+      <ClaudeSkillModal isOpen={skillModalOpen} onClose={() => setSkillModalOpen(false)} />
 
       <main className="flex-1 overflow-y-auto pb-20">
         {children}

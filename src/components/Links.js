@@ -1,11 +1,9 @@
-import React from 'react';
+'use client';
+import { useState } from 'react';
 import { ExternalLink, Bot } from 'lucide-react';
-
-const CLAUDE_SKILL_URL =
-  'https://claude.ai/new?q=Install%20the%20skill%20from%20https%3A%2F%2Fgithub.com%2Falexey-max-fedorov%2Fmvhs-bellschedule-skill';
+import ClaudeSkillModal from './ClaudeSkillModal';
 
 const LINKS = [
-  { title: 'Install Claude Bell Schedule Skill', url: CLAUDE_SKILL_URL, icon: Bot },
   { title: 'Home Page', url: 'https://mvhs.mvla.net' },
   { title: 'Daily Bulletin', url: 'https://mvhs.mvla.net/daily-bulletin-home' },
   { title: 'MVHS Staff', url: 'https://mvhs.mvla.net/Staff-Directory/index.html' },
@@ -33,11 +31,26 @@ function LinkCard({ title, url, icon: Icon = ExternalLink }) {
 }
 
 export default function Links() {
+  const [modalOpen, setModalOpen] = useState(false);
+
   return (
     <div className="max-w-lg mx-auto px-4 py-4 space-y-2">
+      <button
+        onClick={() => setModalOpen(true)}
+        className="w-full glass rounded-glass p-4 flex items-center gap-3 transition-all duration-150 hover:border-primary/30 hover:shadow-amber-glow active:scale-[0.98] text-left"
+      >
+        <div className="p-2 rounded-lg bg-white/5 shrink-0">
+          <Bot size={18} className="text-muted-foreground" />
+        </div>
+        <p className="font-medium text-sm flex-1">Install Claude Bell Schedule Skill</p>
+        <ExternalLink size={13} className="text-muted-foreground/40 shrink-0" />
+      </button>
+
       {LINKS.map((link) => (
-        <LinkCard key={link.url} title={link.title} url={link.url} icon={link.icon} />
+        <LinkCard key={link.url} title={link.title} url={link.url} />
       ))}
+
+      <ClaudeSkillModal isOpen={modalOpen} onClose={() => setModalOpen(false)} />
     </div>
   );
 }
