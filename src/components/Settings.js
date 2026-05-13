@@ -14,8 +14,8 @@ function Barcode({ value }) {
       JsBarcode(svgRef.current, value, {
         format: 'CODE128',
         displayValue: false,
-        background: 'transparent',
-        lineColor: '#F59E0B',
+        background: '#ffffff',
+        lineColor: '#000000',
         margin: 8,
       });
     } catch {
@@ -103,7 +103,7 @@ export default function Settings() {
       </div>
 
       {showBarcode && (
-        <div className="glass rounded-glass p-4">
+        <div className="rounded-glass p-4 bg-white border border-black/[.08]">
           <h2 className="text-[11px] font-semibold uppercase tracking-widest text-muted-foreground mb-4">
             Barcode
           </h2>
