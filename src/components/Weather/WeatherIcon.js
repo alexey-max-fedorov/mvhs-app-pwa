@@ -1,17 +1,12 @@
 import React from 'react';
-import Rainy from './icons/cloud-rain.svg';
-import AcUnit from './icons/cloud-snow.svg';
-import WbSunny from './icons/day-sunny.svg';
-import WbCloudy from './icons/cloud.svg';
-import Thunder from './icons/cloud-rain-lightning.svg';
 
 function iconForForecast(forecast) {
   if (!forecast) return null;
-  if (forecast.includes('Snow')) return <img alt="snow" src={AcUnit} />;
-  if (forecast.includes('Thunder')) return <img alt="thunder" src={Thunder} />;
-  if (forecast.includes('Rain') || forecast.includes('Shower')) return <img alt="rain" src={Rainy} />;
-  if (forecast.includes('Sun') || forecast.includes('Clear')) return <img alt="sunny" src={WbSunny} />;
-  if (forecast.includes('Cloud') || forecast.includes('Overcast')) return <img alt="cloudy" src={WbCloudy} />;
+  if (forecast.includes('Snow')) return <img alt="snow" src="/icons/cloud-snow.svg" />;
+  if (forecast.includes('Thunder')) return <img alt="thunder" src="/icons/cloud-rain-lightning.svg" />;
+  if (forecast.includes('Rain') || forecast.includes('Shower')) return <img alt="rain" src="/icons/cloud-rain.svg" />;
+  if (forecast.includes('Sun') || forecast.includes('Clear')) return <img alt="sunny" src="/icons/day-sunny.svg" />;
+  if (forecast.includes('Cloud') || forecast.includes('Overcast')) return <img alt="cloudy" src="/icons/cloud.svg" />;
   return null;
 }
 
