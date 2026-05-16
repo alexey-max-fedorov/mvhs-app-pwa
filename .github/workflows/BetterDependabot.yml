@@ -8,6 +8,8 @@ on:
 jobs:
   update-dependencies:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -16,8 +18,6 @@ jobs:
           node-version: '20.x'
 
       - uses: pnpm/action-setup@v4
-        with:
-          version: 9
 
       - name: Update dependencies in root
         working-directory: .
