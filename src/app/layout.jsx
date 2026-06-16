@@ -2,14 +2,71 @@ import { ViewTransitions } from 'next-view-transitions';
 import Shell from '../components/Shell';
 import '../index.css';
 
+const BASE_URL = 'https://mvhs.pro';
+
 export const metadata = {
-  title: 'MVHS App',
-  description: 'Mountain View High School student app',
+  metadataBase: new URL(BASE_URL),
+  title: {
+    default: 'MVHS App – Mountain View High School',
+    template: '%s | MVHS App',
+  },
+  description:
+    'The official student app for Mountain View High School. Check your bell schedule, view the campus map, access student links, and more.',
+  keywords: [
+    'Mountain View High School',
+    'MVHS',
+    'bell schedule',
+    'campus map',
+    'MVHS App',
+    'Mountain View CA',
+    'student app',
+    'high school schedule',
+  ],
+  authors: [{ name: 'MVHS App' }],
+  creator: 'MVHS App',
+  applicationName: 'MVHS App',
+  referrer: 'origin-when-cross-origin',
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: BASE_URL,
+    siteName: 'MVHS App',
+    title: 'MVHS App – Mountain View High School',
+    description:
+      'The official student app for Mountain View High School. Check your bell schedule, view the campus map, access student links, and more.',
+    images: [
+      {
+        url: '/icons/icon-512.png',
+        width: 512,
+        height: 512,
+        alt: 'MVHS App logo',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary',
+    title: 'MVHS App – Mountain View High School',
+    description:
+      'The official student app for Mountain View High School. Check your bell schedule, view the campus map, and more.',
+    images: ['/icons/icon-512.png'],
+  },
   icons: {
     icon: [
       { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
       { url: '/favicon.svg', type: 'image/svg+xml' },
     ],
+    apple: '/icons/icon-192.png',
   },
 };
 
