@@ -17,6 +17,7 @@
   },
   "devDependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
+    "@tailwindcss/postcss": "^4.3.1",
     "autoprefixer": "^10.5.2",
     "jsdom": "^29.1.1",
     "postcss": "^8.5.15",
