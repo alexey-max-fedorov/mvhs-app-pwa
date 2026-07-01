@@ -17,11 +17,11 @@
   },
   "devDependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
-    "@tailwindcss/postcss": "^4.3.1",
+    "@tailwindcss/postcss": "^4.3.2",
     "autoprefixer": "^10.5.2",
     "jsdom": "^29.1.1",
     "postcss": "^8.5.16",
-    "tailwindcss": "^4.3.1",
+    "tailwindcss": "^4.3.2",
     "vitest": "^4.1.9"
   },
   "scripts": {
