@@ -192,6 +192,11 @@ export default function AboutPage() {
         ))}
       </div>
 
+      <p className="text-center text-xs text-muted-foreground">
+        <a href="/privacy" className="text-primary hover:underline">
+          Privacy Policy
+        </a>
+      </p>
     </div>
   );
 }
