@@ -2,8 +2,6 @@
 
 An unofficial Progressive Web App for Mountain View High School — bell schedules, campus maps, and school events.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Falexey-max-fedorov%2Fmvhs-app-pwa&env=VITE_GOOGLE_CALENDAR_API_KEY&envDescription=Google%20Calendar%20API%20key%20for%20the%20school%20calendar)
-
 Live: [mvhs.pro](https://mvhs.pro)
 
 ## Development
@@ -17,10 +15,10 @@ npm install -g pnpm
 # Install dependencies
 pnpm install
 
-# Start dev server (http://localhost:5173)
-pnpm start
+# Start dev server (http://localhost:3000)
+pnpm dev
 
-# Production build → dist/
+# Static export → out/
 pnpm build
 ```
 
@@ -30,15 +28,8 @@ Copy `.env.example` to `.env.local` and fill in your values:
 
 | Variable | Description |
 |---|---|
-| `VITE_GOOGLE_CALENDAR_API_KEY` | Google Calendar API key for the school calendar |
+| `NEXT_PUBLIC_GOOGLE_CALENDAR_API_KEY` | Google Calendar API key for the school calendar |
 
-## Deploy to Vercel
+## Deploy (GitHub Pages)
 
-Click the **Deploy with Vercel** button above. During setup, set the `VITE_GOOGLE_CALENDAR_API_KEY` environment variable in the Vercel dashboard.
-
-## Deploy to Firebase
-
-```bash
-pnpm build
-firebase deploy
-```
+Pushes to `master` run `.github/workflows/deploy-website.yml`, which builds the static export (`output: 'export'`) and deploys `out/` to GitHub Pages. The custom domain is set via `public/CNAME` (`mvhs.pro`). The calendar API key is a public browser key, set as `NEXT_PUBLIC_GOOGLE_CALENDAR_API_KEY` in the workflow env.

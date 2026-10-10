@@ -1,5 +1,7 @@
 const BASE_URL = 'https://mvhs.pro';
 
+export const dynamic = 'force-static';
+
 export default function robots() {
   return {
     rules: {
