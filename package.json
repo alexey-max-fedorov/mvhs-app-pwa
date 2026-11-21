@@ -7,23 +7,23 @@
   "dependencies": {
     "clsx": "^2.1.1",
     "jsbarcode": "^3.12.3",
-    "lucide-react": "^1.73.0",
+    "lucide-react": "^1.76.0",
     "moment": "^2.31.0",
     "next": "^16.4.6",
     "next-view-transitions": "^0.3.5",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
-    "tailwind-merge": "^3.7.0"
+    "tailwind-merge": "^3.7.1"
   },
   "devDependencies": {
     "@ducanh2912/next-pwa": "^10.2.9",
     "@tailwindcss/postcss": "^4.3.5",
-    "autoprefixer": "^10.6.2",
+    "autoprefixer": "^10.7.0",
     "jsdom": "^31.0.1",
     "postcss": "^8.5.33",
     "tailwindcss": "^4.3.5",
     "vite": "^8.3.8",
-    "vitest": "^5.1.0"
+    "vitest": "^5.1.1"
   },
   "scripts": {
     "dev": "next dev",
